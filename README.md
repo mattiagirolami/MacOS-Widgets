@@ -5,18 +5,21 @@ A collection of desktop widgets for [Übersicht](http://tracesof.net/uebersicht/
 ## Widgets
 
 ### ⏰ clock.widget
+
 Digital clock with date. Refreshes every **1 second**.
 
 ### 🖥️ system-info.widget
-Glassmorphism-style system panel showing:
-- **CPU** — user / sys usage percentages
-- **RAM** — used memory + *really available* percentage (from `memory_pressure`)
-- **Temperature** — thermal state via `pmset -g therm`; turns **red** when the system is throttling, green when normal
-- **Disk** — free space / total on `/`
 
-Refreshes every **30 seconds**. Positioned bottom-right, below the clock.
+Glassmorphism-style system panel with **two concentric rings** (SVG) — CPU outer, RAM inner — plus the thermal state in the center. Ring color shifts green → yellow → red as usage grows:
+
+- **CPU** — user / sys usage percentages (ring = user + sys)
+- **RAM** — *really available* percentage from `memory_pressure` (ring = 100 − free); used memory shown in the legend
+- **Temperature** — thermometer icon in the center, colored by range (green < 40°C, yellow < 55°C, orange < 70°C, red ≥ 70°C) with the °C value below, read from the `AppleSmartBattery` sensor via `ioreg` (no sudo); turns **red + "HOT"** when `pmset` reports throttling. Note: without admin rights macOS only exposes the battery/pack sensor, not the real SoC temp — it tracks system heat well enough for a widget.
+
+Refreshes every **30 seconds**. Positioned bottom-right, below the energy widget.
 
 ### ⚡ energy.widget
+
 Top **3 processes** by power impact on Apple Silicon (colonna `POWER` di `top`), con barra proporzionale colorata: rosso = alto consumo, giallo = medio, verde = basso. Se nessun processo sta consumando, mostra "Sistema in riposo 🌙".
 
 Refreshes every **30 seconds**. Positioned bottom-right, above the clock.
@@ -34,7 +37,7 @@ ln -s "$(pwd)/system-info.widget" ~/Library/Application\ Support/Übersicht/widg
 ln -s "$(pwd)/energy.widget" ~/Library/Application\ Support/Übersicht/widgets/
 ```
 
-4. Launch Übersicht. Widgets reload automatically on file changes.
+1. Launch Übersicht. Widgets reload automatically on file changes.
 
 ## Notes
 
